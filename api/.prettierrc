@@ -1,0 +1,11 @@
+{
+    "phpVersion": "8.1",
+    "bracketSameLine": true,
+    "printWidth": 100,
+    "useTabs": false,
+    "semi": true,
+    "trailingComma": "all",
+    "trailingCommaPHP": true,
+    "singleQuote": false,
+    "plugins": ["@prettier/plugin-php"]
+}

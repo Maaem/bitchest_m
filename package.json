@@ -1,0 +1,15 @@
+{
+  "name": "bitchest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "front": "cd front && pnpm dev",
+    "api": "docker compose up -d",
+    "api-stop": "docker compose stop mysql api phpmyadmin",
+    "dev" :"pnpm front && pnpm api"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
