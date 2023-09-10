@@ -48,8 +48,33 @@ class CryptoWalletController extends Controller
      */
     public function show(CryptoWallet $cryptoWallet)
     {
-        //
+        try {
+            // Vous pouvez maintenant accéder aux données spécifiques aux transactions de crypto-monnaie
+            $cryptoCurrency = $cryptoWallet->currency;
+            $purchaseDate = $cryptoWallet->purchase_date;
+            $purchasePrice = $cryptoWallet->purchase_price;
+            $salePrice = $cryptoWallet->sale_price;
+            $profit = $cryptoWallet->profit;
+
+            // Vous pouvez les inclure dans la réponse JSON
+            return Response::json(
+                [
+                    "crypto_name" => $cryptoCurrency->crypto_name,
+                    "purchase_date" => $purchaseDate,
+                    "purchase_price" => $purchasePrice,
+                    "sale_price" => $salePrice,
+                    "profit" => $profit,
+                ],
+                \Illuminate\Http\Response::HTTP_OK
+            );
+        } catch (\Exception $exception) {
+            return $exception;
+        }
     }
+
+
+
+
 
     public function delete(CryptoWallet $cryptoWallet)
     {

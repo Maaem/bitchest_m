@@ -39,7 +39,7 @@ class UserController extends Controller
     {
         try {
             $user = User::create($request->validated());
-            $user->wallet()->create(["quantity" => 500]);
+            $user->wallet()->create(["quantity" => 100000]);
             return Response::json(
                 [
                     "message" => "L'opération s'est déroulée avec succès",

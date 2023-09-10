@@ -18,7 +18,7 @@ class WalletFactory extends Factory
     public function definition(): array
     {
         return [
-            "quantity" => 500,
+            "quantity" => 100000,
             "user_id" => User::factory(),
         ];
     }

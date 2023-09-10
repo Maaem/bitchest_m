@@ -16,8 +16,6 @@ return new class extends Migration {
             $table->softDeletes("sell_at");
             $table->decimal("capital_gain")->nullable(true);
             $table->unsignedBigInteger("quantity")->nullable(false);
-            $table->timestamp("purchase_date")->nullable();
-            $table->decimal("purchase_price", 10, 2)->nullable();
             $table->decimal("sale_price", 10, 2)->nullable();
             $table->decimal("profit", 10, 2)->nullable();
 

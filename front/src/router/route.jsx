@@ -116,10 +116,10 @@ const clientRoute = new Route({
     }
   },
 });
-const currenciesListRoute = new Route({
+const cryptoListRoute = new Route({
   getParentRoute: () => rootRoute,
   path: "currencies",
-  component: Crud.CurrenciesList,
+  component: Crud.CryptoList,
   beforeLoad: async () => {
     if (getState().user === null) {
       throw redirect({
@@ -183,7 +183,7 @@ const walletRoute = new Route({
       });
     }
   },
-  component: Crud.UserWallets,
+  component: Crud.clientWallets,
   loader: async () => {
     return getUsersCryptoWallet();
   },
@@ -212,7 +212,7 @@ export {
   rootRoute,
   updateUserRoute,
   createUserRoute,
-  currenciesListRoute,
+  cryptoListRoute,
   currencyRate,
   purchaseRoute,
   walletRoute,

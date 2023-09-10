@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create("currency_histories", function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger("quoting");
+            $table->bigInteger("quoting"); // Utilisez bigInteger au lieu de unsignedInteger
             $table->date("date");
 
             $table

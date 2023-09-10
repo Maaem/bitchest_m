@@ -59,6 +59,7 @@ export const signIn = async (credentials) => {
   return response;
 };
 
+// si il est admin ou client
 export const isAuthenticated = async () => {
   const response = await api.get("/user");
   return response.data;
@@ -111,6 +112,7 @@ export const addUser = async (payload) => {
   return response;
 };
 
+// afficher toutes les crypto-monnaies
 export const getCurrencies = async () => {
   const response = await api.get("/currency");
   return response.data;
@@ -136,6 +138,7 @@ export const achatCrypto = async (payload) => {
   return response;
 };
 
+//détails du compte client
 export const getUsersCryptoWallet = async () => {
   const response = await api.get("/me");
   return response.data;

@@ -10,20 +10,27 @@ class Quoting
      */
     public static function getFirstCotation($cryptoname)
     {
-        return abs(ord(substr($cryptoname, 0, 1)) + rand(0, 10));
+        // Générez un nombre aléatoire entre 1 et 60,000
+        $cotation = ord(substr($cryptoname, 0, 1)) + rand(1, 60000);
+
+        return $cotation;
     }
+
+
 
     /**
      * Renvoie la variation de cotation de la crypto monnaie sur un jour
      * @param $cryptoname {string} Le nom de la crypto monnaie
      */
-    public static function getCotationFor($cryptoname)
+        public static function getCotationFor($cryptoname)
     {
-        return abs(rand(0, 99) > 40 ? 1 : -1) *
-            abs(
-                rand(0, 99) > 49
-                    ? ord(substr($cryptoname, 0, 1))
-                    : abs(ord(substr($cryptoname, -1))) * (rand(1, 10) * 0.01),
-            );
+        // Générez un nombre aléatoire entre 1 et 60,000
+        $cotation = rand(1, 60000);
+
+        // Pas besoin de vérifier si la cotation est positive ou négative, elle sera toujours positive
+        return $cotation;
     }
+
+
+
 }

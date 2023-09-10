@@ -1,8 +1,9 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useLoader } from "@tanstack/react-router";
 import { userStore } from "@/store/userStore";
 import { CustomLink } from "@/components/navBar/CustomLink";
 
-export const CurrenciesList = () => {
+export const cryptoList = () => {
   const currencies = useLoader();
   const { getState } = userStore;
 
@@ -38,7 +39,7 @@ export const CurrenciesList = () => {
             <td className="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">{val.id}</td>
             <td className="px-3 py-4 text-sm font-medium text-gray-900">{val.crypto_name}</td>
             <td className="px-3 py-4 text-sm font-medium text-gray-900">
-              {val.currency_histories[0].quoting}
+              {val.currency_histories[0].quoting} €
             </td>
             <td className="px-3 py-4 text-sm font-medium text-gray-900">
               <CustomLink

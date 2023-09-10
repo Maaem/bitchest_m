@@ -1,5 +1,4 @@
 import { useLoader, useNavigate } from "@tanstack/react-router";
-import { Button, Flex, FormControl, FormLabel, Input, Select, Text } from "@chakra-ui/react";
 import { updateUserById } from "@/api/index.js";
 
 export const AdminUpdateUser = () => {
@@ -26,36 +25,39 @@ export const AdminUpdateUser = () => {
 
   return (
     <>
-      <Flex
-        alignItems={"center"}
-        justifyContent={"center"}
-        flexDir={"column"}
-        mt={["5rem", "5rem", "0rem"]}>
-        <Text as={"h1"} my={"1rem"}>
-          Modifier un utilisateur
-        </Text>
-        <Flex
-          p={"2rem"}
-          border={"1px"}
-          borderColor="gray.200"
-          as={"form"}
-          gap={"1rem"}
-          flexDir={"column"}
+      <div className="flex items-center justify-center flex-col mt-20">
+        <h1 className="my-4 text-xl font-semibold">Modifier un utilisateur</h1>
+        <form
+          className="p-8 border border-gray-200 flex flex-col space-y-4"
           onSubmit={(e) => modifyUserInfo(e)}>
-          <FormControl>
-            <FormLabel>Email address</FormLabel>
-            <Input name={"email"} readOnly={true} value={user.email} type="email" />
-          </FormControl>
-          <FormControl>
-            <FormLabel>Rôle</FormLabel>
-            <Select name={"role"}>
+          <div className="mb-4">
+            <label htmlFor="email" className="block">
+              Email address
+            </label>
+            <input
+              name="email"
+              readOnly={true}
+              value={user.email}
+              type="email"
+              className="w-full border border-gray-300 p-2 rounded"
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="role" className="block">
+              Rôle
+            </label>
+            <select name="role" className="w-full border border-gray-300 p-2 rounded">
               <option>{user.role}</option>
               <option>{otherRole}</option>
-            </Select>
-          </FormControl>
-          <Button type={"submit"}>Modifier</Button>
-        </Flex>
-      </Flex>
+            </select>
+          </div>
+          <button
+            type="submit"
+            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
+            Modifier
+          </button>
+        </form>
+      </div>
     </>
   );
 };
