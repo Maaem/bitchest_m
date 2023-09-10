@@ -12,7 +12,7 @@ export const Sidebar = () => {
   const { getState } = userStore;
 
   /**
-   * @type {import("@/crud/UserWallets").Wallet}
+   * @type {import("@/crud/clientWallets").Wallet}
    */
   const wallet = useLoader();
 
