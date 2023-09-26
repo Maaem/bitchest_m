@@ -28,11 +28,12 @@ export const clientWallets = () => {
         // Trouver l'index de la crypto-monnaie vendue dans le tableau
         const index = cryptoWallets.findIndex((wallet) => wallet.currency.id === currencyId);
         if (index !== -1) {
-          // Mettre à jour la date de vente dans le tableau sans supprimer la ligne
+          
           const updatedCryptoWallets = [...cryptoWallets];
           updatedCryptoWallets[index].sell_at = sell_at;
           setCryptoWallets(updatedCryptoWallets);
         }
+        router.invalidate();
       }
     } catch (err) {
       console.log(err);
@@ -77,16 +78,6 @@ export const clientWallets = () => {
                     <th
                       scope="col"
                       className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                      Date d'achat
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                      Plus values au moment de la
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                       Cours sur la période
                     </th>
                     <th
@@ -113,14 +104,8 @@ export const clientWallets = () => {
                         {val.quantity}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {val.created_at}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {val.sell_at}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                         <a
-                          href={`/wallet/detail/${val.currency.id}`}
+                          href={`currency/${val.currency.id}`}
                           className="bg-blue-500 text-white rounded-md py-2 px-4 text-center inline-block">
                           Voir le détail
                         </a>
