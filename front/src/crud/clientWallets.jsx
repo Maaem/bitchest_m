@@ -7,7 +7,7 @@ import { sellCurrency } from "@/api";
 /**
  * @typedef {Object} CryptoWallet
  * @property {string} quantity - La quantité de crypto-monnaie dans le portefeuille.
- * @property {string} id - La quantit�� de crypto-monnaie dans le portefeuille.
+ * @property {string} id - La quantité de crypto-monnaie dans le portefeuille.
  * @property {string} created_at - La date de création du portefeuille au format "JJ-MM-AAAA".
  * @property {string} sell_at - La date de vente du portefeuille au format "JJ-MM-AAAA".
  * @property {number|null} capital_gain - Le gain en capital (peut être null).

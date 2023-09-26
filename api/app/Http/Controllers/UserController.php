@@ -16,37 +16,27 @@ use Illuminate\Support\Facades\Response;
 
 class UserController extends Controller
 {
-    /**
-     * Create the controller instance.
-     * @param UserService $userService
-     */
-    public function __construct(protected UserService $userService)
+    public function __construct()
     {
         $this->authorizeResource(User::class, "user");
     }
 
-    /**
-     * Display a listing of the resource.
-     * @return AnonymousResourceCollection|\Exception
-     */
-    public function index(): AnonymousResourceCollection|\Exception
+
+    public function index()
     {
         try {
-            return UserResource::collection($this->userService->getAllUsers());
-        } catch (\Exception $exception) {
+            return UserResource::collection(User::all());
+        } catch (AuthorizationException $exception) {
             return $exception;
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     * @param StoreUserRequest $request
-     * @return JsonResponse|\Exception
-     */
-    public function store(StoreUserRequest $request): JsonResponse|\Exception
+    
+    public function store(StoreUserRequest $request)
     {
         try {
-            $this->userService->createUser($request);
+            $user = User::create($request->validated());
+            $user->wallet()->create(["quantity" => 100000]);
             return Response::json(
                 [
                     "message" => "L'opération s'est déroulée avec succès",
@@ -54,35 +44,29 @@ class UserController extends Controller
                 ],
                 \Illuminate\Http\Response::HTTP_OK,
             );
+        } catch (ValidationException $exception) {
+            return Response::json([
+                "message" => $exception,
+                "status" => \Illuminate\Http\Response::HTTP_OK,
+            ]);
+        }
+    }
+
+    public function show(User $user)
+    {
+        try {
+            return new UserResource(User::query()->findOrFail($user->id));
         } catch (\Exception $exception) {
             return $exception;
         }
     }
 
-    /**
-     * Display the specified resource.
-     * @param User $user
-     * @return UserResource|\Exception
-     */
-    public function show(User $user): UserResource|\Exception
+    
+    public function update(UpdateUserRequest $request, User $user)
     {
         try {
-            return UserResource::make($this->userService->getUser($user));
-        } catch (\Exception $exception) {
-            return $exception;
-        }
-    }
-
-    /**
-     * Update the specified resource in storage.
-     * @param UpdateUserRequest $request
-     * @param User $user
-     * @return JsonResponse|\Exception
-     */
-    public function update(UpdateUserRequest $request, User $user): JsonResponse|\Exception
-    {
-        try {
-            $this->userService->updateUser($request, $user);
+            $validateData = $request->validated();
+            $user->update($validateData);
             return Response::json(
                 [
                     "message" => "L'utilisateur a bien été modifié'",
@@ -95,15 +79,11 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     * @param User $user
-     * @return JsonResponse|\Exception$
-     */
-    public function destroy(User $user): JsonResponse|\Exception
+    
+    public function destroy(User $user)
     {
         try {
-            $this->userService->deleteUser($user);
+            $user->delete();
             return Response::json(
                 [
                     "message" => "L'opération à été un succès",
