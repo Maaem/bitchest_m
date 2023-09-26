@@ -41,6 +41,7 @@ class CreditUserWallet
 
     public function handle(CryptoSale $event)
     {
+        Log::info('Listener CreditUserWallet is called.');
         $benefices = $event->cryptoToDeleted
             ->map(function ($item) use ($event) {
                 // Vérification si $event->currencyHistory est nul

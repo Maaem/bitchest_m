@@ -7,39 +7,46 @@ use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Models\Wallet;
+use App\Services\UserService;
 use Dotenv\Exception\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Response;
 
 class UserController extends Controller
 {
     /**
      * Create the controller instance.
+     * @param UserService $userService
      */
-    public function __construct()
+    public function __construct(protected UserService $userService)
     {
         $this->authorizeResource(User::class, "user");
     }
+
     /**
      * Display a listing of the resource.
+     * @return AnonymousResourceCollection|\Exception
      */
-    public function index()
+    public function index(): AnonymousResourceCollection|\Exception
     {
         try {
-            return UserResource::collection(User::all());
-        } catch (AuthorizationException $exception) {
+            return UserResource::collection($this->userService->getAllUsers());
+        } catch (\Exception $exception) {
             return $exception;
         }
     }
 
     /**
      * Store a newly created resource in storage.
+     * @param StoreUserRequest $request
+     * @return JsonResponse|\Exception
      */
-    public function store(StoreUserRequest $request)
+    public function store(StoreUserRequest $request): JsonResponse|\Exception
     {
         try {
-            $user = User::create($request->validated());
-            $user->wallet()->create(["quantity" => 100000]);
+            $this->userService->createUser($request);
             return Response::json(
                 [
                     "message" => "L'opération s'est déroulée avec succès",
@@ -47,21 +54,20 @@ class UserController extends Controller
                 ],
                 \Illuminate\Http\Response::HTTP_OK,
             );
-        } catch (ValidationException $exception) {
-            return Response::json([
-                "message" => $exception,
-                "status" => \Illuminate\Http\Response::HTTP_OK,
-            ]);
+        } catch (\Exception $exception) {
+            return $exception;
         }
     }
 
     /**
      * Display the specified resource.
+     * @param User $user
+     * @return UserResource|\Exception
      */
-    public function show(User $user)
+    public function show(User $user): UserResource|\Exception
     {
         try {
-            return new UserResource(User::query()->findOrFail($user->id));
+            return UserResource::make($this->userService->getUser($user));
         } catch (\Exception $exception) {
             return $exception;
         }
@@ -69,15 +75,17 @@ class UserController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * @param UpdateUserRequest $request
+     * @param User $user
+     * @return JsonResponse|\Exception
      */
-    public function update(UpdateUserRequest $request, User $user)
+    public function update(UpdateUserRequest $request, User $user): JsonResponse|\Exception
     {
         try {
-            $validateData = $request->validated();
-            $user->update($validateData);
+            $this->userService->updateUser($request, $user);
             return Response::json(
                 [
-                    "message" => "La paire a bien été modifié.",
+                    "message" => "L'utilisateur a bien été modifié'",
                     "status" => \Illuminate\Http\Response::HTTP_OK,
                 ],
                 \Illuminate\Http\Response::HTTP_OK,
@@ -89,11 +97,13 @@ class UserController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     * @param User $user
+     * @return JsonResponse|\Exception$
      */
-    public function destroy(User $user)
+    public function destroy(User $user): JsonResponse|\Exception
     {
         try {
-            $user->delete();
+            $this->userService->deleteUser($user);
             return Response::json(
                 [
                     "message" => "L'opération à été un succès",

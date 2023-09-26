@@ -2,15 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\CryptoProfits;
 use App\Events\CryptoPurchase;
-use App\Events\CryptoSale;
 use App\Http\Requests\StoreCryptoWalletRequest;
 use App\Models\CryptoWallet;
-use App\Models\Currency;
-use App\Models\CurrencyHistory;
-use App\Models\Wallet;
-use Illuminate\Http\Request;
+use App\Services\CryptoWalletServices;
+use App\Services\CurrencyHistoryServices;
+use App\Services\WalletService;
 use Illuminate\Support\Facades\Response;
 
 class CryptoWalletController extends Controller
@@ -18,9 +15,11 @@ class CryptoWalletController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        //
+    public function __construct(
+        protected CryptoWalletServices $cryptoWalletServices,
+        protected CurrencyHistoryServices $currencyHistoryServices,
+        protected WalletService $walletService,
+    ) {
     }
 
     /**
@@ -73,31 +72,26 @@ class CryptoWalletController extends Controller
     }
 
 
-
-
-
     public function delete(CryptoWallet $cryptoWallet)
     {
         try {
-            $quotingForSell = CurrencyHistory::whereDate("date", now())
-                ->where("currency_id", "=", $cryptoWallet->currency_id)
-                ->firstOrFail();
-            $cryptoToDeleted = CryptoWallet::where("currency_id", "=", $cryptoWallet->currency_id)
-                ->where("user_id", "=", $cryptoWallet->user_id)
-                ->get()
-                ->each(function ($item) {
-                    $item->delete();
-                });
-            $ids = $cryptoToDeleted->map(function ($item) {
-                return $item->id;
-            });
-            $benef = CryptoSale::dispatch($quotingForSell, $cryptoToDeleted);
-            $diff = CryptoProfits::dispatch($cryptoToDeleted);
-            $capital_gain = $benef[0] - $diff[0];
-            $withTrashed = CryptoWallet::onlyTrashed()
-                ->whereIn("id", $ids)
-                ->get();
-            $withTrashed->each->update(["capital_gain" => $capital_gain]);
+            $quotingForSell = $this->currencyHistoryServices->getQuotingAtCurrentDate(
+                $cryptoWallet->currency_id,
+            );
+            $deletedCrypto = $this->cryptoWalletServices->deleteCrypto($cryptoWallet);
+
+            $capitalGainAtCurrentDate = $this->walletService->creditUserWallet(
+                $quotingForSell,
+                $deletedCrypto,
+            );
+            $amountOfPurchaseDate = $this->cryptoWalletServices->calculatePurchaseAmount(
+                $deletedCrypto,
+            );
+            $capitalGain = $this->cryptoWalletServices->calculateCapitalGain(
+                $capitalGainAtCurrentDate,
+                $amountOfPurchaseDate,
+            );
+            $this->cryptoWalletServices->fillCapitalGainValue($deletedCrypto, $capitalGain);
             return Response::json(
                 [
                     "message" => "L'opération s'est déroulée avec succès",
@@ -105,7 +99,9 @@ class CryptoWalletController extends Controller
                 ],
                 \Illuminate\Http\Response::HTTP_CREATED,
             );
-        } catch (\Exception) {
+        } catch (\Exception $exception) {
+            return $exception;
         }
     }
+
 }

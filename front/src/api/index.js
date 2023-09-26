@@ -45,7 +45,7 @@ api.interceptors.response.use(
 );
 
 export const getCsrfToken = async () => {
-  await axios.get(import.meta.env.VITE_API_BASEURL + "/sanctum/csrf-cookie");
+  await axios.get(import.meta.env.VITE_API_BASEURL + "sanctum/csrf-cookie");
 };
 
 /**

@@ -119,7 +119,7 @@ const clientRoute = new Route({
 const cryptoListRoute = new Route({
   getParentRoute: () => rootRoute,
   path: "currencies",
-  component: Crud.CryptoList,
+  component: Crud.cryptoList,
   beforeLoad: async () => {
     if (getState().user === null) {
       throw redirect({

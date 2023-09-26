@@ -64,7 +64,6 @@ class CryptoWallet extends Model
     }
     public function sellCrypto(CryptoWallet $cryptoWallet): CryptoWallet|Collection
     {
-        $cryptoWallet = $this->findOrFail($cryptoWallet->id);
         return $this::where("id", "=", $cryptoWallet->id)
             ->where("user_id", "=", $cryptoWallet->user_id)
             ->get()

@@ -1,12 +1,13 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react-hooks/rules-of-hooks */
+import React, { useState, useEffect } from "react";
 import { useLoader, useRouter } from "@tanstack/react-router";
 import { sellCurrency } from "@/api";
 
 /**
  * @typedef {Object} CryptoWallet
  * @property {string} quantity - La quantité de crypto-monnaie dans le portefeuille.
- * @property {string} id - La quantité de crypto-monnaie dans le portefeuille.
+ * @property {string} id - La quantit�� de crypto-monnaie dans le portefeuille.
  * @property {string} created_at - La date de création du portefeuille au format "JJ-MM-AAAA".
  * @property {string} sell_at - La date de vente du portefeuille au format "JJ-MM-AAAA".
  * @property {number|null} capital_gain - Le gain en capital (peut être null).
@@ -14,23 +15,36 @@ import { sellCurrency } from "@/api";
  */
 
 export const clientWallets = () => {
-  const userWithWallet = useLoader();
+  const usersWithWallet = useLoader();
   const router = useRouter();
+
+  const [cryptoWallets, setCryptoWallets] = useState(usersWithWallet[0]?.crypto_wallets);
 
   const sellACurrency = async (e, currencyId) => {
     e.preventDefault();
     try {
-      const res = await sellCurrency(currencyId);
-      console.log(res);
-      if (res.status === 201) {
-        router.invalidate();
+      const { data: { sell_at } = {} } = await sellCurrency(currencyId);
+      if (sell_at) {
+        // Trouver l'index de la crypto-monnaie vendue dans le tableau
+        const index = cryptoWallets.findIndex((wallet) => wallet.currency.id === currencyId);
+        if (index !== -1) {
+          // Mettre à jour la date de vente dans le tableau sans supprimer la ligne
+          const updatedCryptoWallets = [...cryptoWallets];
+          updatedCryptoWallets[index].sell_at = sell_at;
+          setCryptoWallets(updatedCryptoWallets);
+        }
       }
     } catch (err) {
       console.log(err);
     }
   };
 
+  useEffect(() => {
+    setCryptoWallets(usersWithWallet[0]?.crypto_wallets);
+  }, [usersWithWallet]);
+
   return (
+
     <div className="px-4 sm:px-6 lg:px-8">
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
@@ -86,7 +100,8 @@ export const clientWallets = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
-                  {userWithWallet[0]?.crypto_wallets.map((val) => (
+                {cryptoWallets.map((val) => {
+                  return (
                     <tr key={val.id}>
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                         {val.currency.crypto_name}
@@ -111,14 +126,20 @@ export const clientWallets = () => {
                         </a>
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        <button
-                          className="bg-purple-600 text-white rounded-md py-2 px-4 text-center border-none cursor-pointer"
-                          onClick={(e) => sellACurrency(e, val.currency.id)}>
-                          Vendre
-                        </button>
+                        {val.sell_at ? (
+                          "Vendu"
+                        ) : (
+                          <button
+                            className="bg-purple-600 text-white rounded-md py-2 px-4 text-center border-none cursor-pointer"
+                            onClick={(e) => sellACurrency(e, val.currency.id)}
+                          >
+                            Vendre
+                          </button>
+                        )}
                       </td>
                     </tr>
-                  ))}
+                  );
+                })}
                 </tbody>
               </table>
             </div>

@@ -19,5 +19,6 @@ class CryptoSale
         public CurrencyHistory $currencyHistory,
         public Collection $cryptoToDeleted,
     ) {
-    }
+        dd("CryptoSale event triggered!", $currencyHistory, $cryptoToDeleted);
+}
 }

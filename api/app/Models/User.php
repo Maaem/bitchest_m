@@ -50,4 +50,46 @@ class User extends Authenticatable
     {
         return $this->hasMany(CryptoWallet::class);
     }
+
+    public function getUserCryptoWalletListWithTrashed(): \Illuminate\Database\Eloquent\Collection|array
+    {
+        return $this::with([
+            "wallet",
+            "cryptoWallets" => function (HasMany $query) {
+                $query
+                    ->select([
+                        "user_id",
+                        "currency_id",
+                        \DB::raw("SUM(capital_gain) as capital_gain"),
+                        \DB::raw("SUM(quantity) as quantity"),
+                    ])
+                    ->groupBy(["user_id", "currency_id"])
+                    ->withTrashed();
+            },
+            "cryptoWallets.currency",
+        ])
+            ->where("id", \Auth::user()->id)
+            ->get();
+    }
+
+    public function getUserCryptoWalletListDetailsWithTrashed(
+        Currency $currency,
+    ): \Illuminate\Database\Eloquent\Collection|array {
+        return $this::with([
+            "wallet",
+            "cryptoWallets" => function (HasMany $query) use ($currency) {
+                return $query->where("currency_id", $currency->id)->withTrashed();
+            },
+            "cryptoWallets.currency",
+        ])
+            ->where("id", \Auth::user()->id)
+            ->get();
+    }
+
+    public function getAllUsersExceptConnectedOne()
+    {
+        return $this::all()
+            ->sortByDesc("created_at")
+            ->where("id", "!=", Auth::user()->id);
+    }
 }
