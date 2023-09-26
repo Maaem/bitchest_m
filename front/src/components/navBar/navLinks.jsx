@@ -50,12 +50,13 @@ export const NavigationLinks = () => {
               flexDir={"column-reverse"}
               alignItems={"center"}
               gap={3}>
-              <Button onClick={() => signOutAndRedirect()}>Déconnexion</Button>
+              <Button alt="bouton deconnexion" onClick={() => signOutAndRedirect()}>Déconnexion</Button>
               <CustomLink
                 to={{ to: "/currencies", from: "/" }}
                 bg={"green.400"}
                 px={"16px"}
                 py={"8px"}
+                alt="afficher la liste des cryptomonnaies"
                 verticalAlign={"middle"}
                 borderRadius={"6px"}
                 minW={"130px"}

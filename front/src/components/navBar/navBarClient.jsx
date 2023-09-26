@@ -10,6 +10,7 @@ export const ClientNavLink = () => {
         py={"8px"}
         verticalAlign={"middle"}
         borderRadius={"6px"}
+        alt="afficher mon portefeuille"
         minW={"130px"}
         textAlign={"center"}
         color={"white"}>

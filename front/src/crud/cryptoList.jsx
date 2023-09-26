@@ -47,7 +47,8 @@ export const cryptoList = () => {
                 p={2}
                 bg={"green.400"}
                 color={"white"}
-                borderRadius={"6px"}>
+                borderRadius={"6px"}
+                alt="bouton voir le cours">
                 Voir le cours
               </CustomLink>
             </td>
@@ -62,7 +63,8 @@ export const cryptoList = () => {
                   p={2.5}
                   bg={"pink.400"}
                   color={"white"}
-                  borderRadius={"6px"}>
+                  borderRadius={"6px"}
+                  alt="bouton acheter">
                   Acheter
                 </CustomLink>
               </td>

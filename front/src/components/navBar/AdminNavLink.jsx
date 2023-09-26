@@ -11,6 +11,7 @@ export const AdminNavLink = () => {
         verticalAlign={"middle"}
         borderRadius={"6px"}
         minW={"130px"}
+        alt="dashboard"
         textAlign={"center"}
         color={"white"}>
         Dashboard

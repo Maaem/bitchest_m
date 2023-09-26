@@ -47,7 +47,7 @@ export const Sidebar = () => {
             w={"100%"}
             alignItems={"center"}>
             {getState().user === "client" && (
-              <Box as={"span"} fontWeight={"700"} p={2}>
+              <Box alt="votre solde" as={"span"} fontWeight={"700"} p={2}>
                 Solde : {wallet.quantity} €
               </Box>
             )}

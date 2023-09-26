@@ -57,7 +57,8 @@ export const PurchaseCurrency = () => {
         </div>
         <button
           type="submit"
-          className="w-full px-4 py-2 bg-pink-400 hover:bg-pink-800 text-white font-semibold rounded">
+          className="w-full px-4 py-2 bg-pink-400 hover:bg-pink-800 text-white font-semibold rounded"
+          alt="bouton acheter">
           Acheter
         </button>
       </form>

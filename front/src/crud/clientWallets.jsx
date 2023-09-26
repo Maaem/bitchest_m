@@ -116,6 +116,7 @@ export const clientWallets = () => {
                         ) : (
                           <button
                             className="bg-purple-600 text-white rounded-md py-2 px-4 text-center border-none cursor-pointer"
+                            alt="bouton vendre"
                             onClick={(e) => sellACurrency(e, val.currency.id)}
                           >
                             Vendre
